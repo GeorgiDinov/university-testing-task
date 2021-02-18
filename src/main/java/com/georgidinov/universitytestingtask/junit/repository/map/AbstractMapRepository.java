@@ -10,20 +10,39 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 
+/**
+ * Defines common behavior through all repositories
+ */
 public abstract class AbstractMapRepository<T extends BaseEntity, ID extends Long> {
 
 
+    /**
+     * The underlying data structure for the 'fake' repository
+     */
     protected Map<Long, T> map = new HashMap<>();
 
 
+    /**
+     * @return All saved objects
+     */
     protected Set<T> findAll() {
         return new HashSet<>(map.values());
     }
 
+
+    /**
+     * @param id of the object
+     * @return Single instance
+     */
     protected T findById(ID id) {
         return map.get(id);
     }
 
+
+    /**
+     * @param object to be saved
+     * @return the saved object
+     */
     protected T save(T object) {
         if (object != null) {
             object.setId(this.getNextId());
@@ -34,14 +53,31 @@ public abstract class AbstractMapRepository<T extends BaseEntity, ID extends Lon
         return object;
     }
 
+
+    /**
+     * Deletes object with the given id
+     *
+     * @param id of the object we wish to delete
+     */
     protected void deleteById(ID id) {
         map.remove(id);
     }
 
+
+    /**
+     * Deletes the passed object
+     *
+     * @param object
+     */
     protected void delete(T object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
     }
 
+    /**
+     * Plays the role of id generator to simulate DB auto increment
+     *
+     * @return Long value for id
+     */
     //== private methods ==
     private Long getNextId() {
         Long nextId = null;

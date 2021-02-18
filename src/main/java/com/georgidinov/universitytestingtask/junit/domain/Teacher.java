@@ -19,8 +19,8 @@ public class Teacher extends BasePerson {
 
 
     @Builder
-    public Teacher(String firstName, String lastName) throws CustomValidationException {
-        super(firstName, lastName);
+    public Teacher(Long id, String firstName, String lastName) throws CustomValidationException {
+        super(id, firstName, lastName);
     }
 
 }

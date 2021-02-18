@@ -27,9 +27,9 @@ public class Student extends BasePerson {
     private List<Mark> marks;
 
     @Builder
-    public Student(String firstName, String lastName,
+    public Student(Long id, String firstName, String lastName,
                    List<Parent> parents, List<Mark> marks) throws CustomValidationException {
-        super(firstName, lastName);
+        super(id, firstName, lastName);
         this.parents = parents;
         this.marks = marks;
     }

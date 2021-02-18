@@ -19,7 +19,8 @@ public abstract class BasePerson implements BaseEntity {
     protected BasePerson() {
     }
 
-    public BasePerson(String firstName, String lastName) throws CustomValidationException {
+    public BasePerson(Long id, String firstName, String lastName) throws CustomValidationException {
+        this.id = id;
         basePersonNameValidator.validate(firstName);
         this.firstName = firstName;
         basePersonNameValidator.validate(lastName);

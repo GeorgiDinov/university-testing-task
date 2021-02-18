@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
+/**
+ * Service the controller class with business logic
+ * Pack, send and return dto objects to and from the data access object(repository)
+ */
 @Slf4j
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -25,6 +29,9 @@ public class TeacherServiceImpl implements TeacherService {
         this.teacherMapper = teacherMapper;
     }
 
+    /**
+     * @return DTO object holding the necessary data for the end user / client
+     */
     @Override
     public TeacherListDTO findAllTeachers() {
         log.info("TeacherServiceImpl::findAllTeachers");

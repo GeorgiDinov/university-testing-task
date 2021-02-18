@@ -19,8 +19,8 @@ public class Parent extends BasePerson {
     private Student student;
 
     @Builder
-    public Parent(String firstName, String lastName, Student student) throws CustomValidationException {
-        super(firstName, lastName);
+    public Parent(Long id, String firstName, String lastName, Student student) throws CustomValidationException {
+        super(id, firstName, lastName);
         this.student = student;
     }
 }

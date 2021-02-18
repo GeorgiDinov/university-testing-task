@@ -3,7 +3,10 @@ package com.georgidinov.universitytestingtask.junit.service;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
 
-public interface TeacherService  {
+/**
+ * Defines teacher service behaviour
+ */
+public interface TeacherService {
 
     TeacherListDTO findAllTeachers();
 
