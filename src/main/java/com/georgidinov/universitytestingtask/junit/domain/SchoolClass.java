@@ -1,5 +1,6 @@
-package com.georgidinov.universitytestingtask.domain;
+package com.georgidinov.universitytestingtask.junit.domain;
 
+import com.georgidinov.universitytestingtask.junit.baseperson.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SchoolClass {
+public class SchoolClass implements BaseEntity {
+
+    private Long id;
 
     private String className;
     private Teacher teacher;

@@ -1,4 +1,4 @@
-package com.georgidinov.universitytestingtask.exception;
+package com.georgidinov.universitytestingtask.junit.exception;
 
 public class CustomValidationException extends Exception {
 

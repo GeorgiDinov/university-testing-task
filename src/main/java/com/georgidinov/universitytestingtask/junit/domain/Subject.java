@@ -1,6 +1,7 @@
-package com.georgidinov.universitytestingtask.domain;
+package com.georgidinov.universitytestingtask.junit.domain;
 
 
+import com.georgidinov.universitytestingtask.junit.baseperson.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Subject {
+public class Subject implements BaseEntity {
+
+    private Long id;
 
     private String subjectName;
 

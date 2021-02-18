@@ -1,7 +1,7 @@
-package com.georgidinov.universitytestingtask.domain;
+package com.georgidinov.universitytestingtask.junit.domain;
 
-import com.georgidinov.universitytestingtask.baseperson.BasePerson;
-import com.georgidinov.universitytestingtask.exception.CustomValidationException;
+import com.georgidinov.universitytestingtask.junit.baseperson.BasePerson;
+import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends BasePerson {
+
+    @Getter
+    @Setter
+    private Long id;
+
     @Getter
     private List<Parent> parents;
 
@@ -29,7 +34,5 @@ public class Student extends BasePerson {
         this.marks = marks;
     }
 
-
-    
 
 }

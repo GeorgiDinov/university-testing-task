@@ -1,7 +1,7 @@
-package com.georgidinov.universitytestingtask.domain;
+package com.georgidinov.universitytestingtask.junit.domain;
 
-import com.georgidinov.universitytestingtask.baseperson.BasePerson;
-import com.georgidinov.universitytestingtask.exception.CustomValidationException;
+import com.georgidinov.universitytestingtask.junit.baseperson.BasePerson;
+import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Teacher extends BasePerson {
+
+    private Long id;
 
 
     @Builder
