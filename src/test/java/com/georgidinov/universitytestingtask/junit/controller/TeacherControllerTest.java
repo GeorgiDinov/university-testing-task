@@ -15,9 +15,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.georgidinov.universitytestingtask.junit.util.ApplicationConstants.TEACHER_BASE_URL;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -57,6 +60,27 @@ class TeacherControllerTest {
     }
 
     @Test
-    void findTeacherById() {
+    void findTeacherById() throws Exception {
+        //given
+        TeacherDTO teacherDTO = new TeacherDTO("John", "Doe", TEACHER_BASE_URL + "/" + 1);
+        when(this.teacherService.findTeacherById(anyLong())).thenReturn(teacherDTO);
+        //when then
+        mockMvc.perform(get(TEACHER_BASE_URL + "/" + 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.first_name", equalTo("John")))
+                .andExpect(jsonPath("$.last_name", equalTo("Doe")))
+                .andExpect(jsonPath("$.teacher_url", equalTo(TEACHER_BASE_URL + "/" + 1)));
+    }
+
+    @Test
+    void findTeacherByIdNotFound() throws Exception {
+        //given
+        String exceptionMessage = "Record with ID = 1 Not Found";
+        when(this.teacherService.findTeacherById(anyLong()))
+                .thenThrow(new NoSuchElementException(exceptionMessage));
+        //when then
+        mockMvc.perform(get(TEACHER_BASE_URL + "/" + 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error_message", equalTo(exceptionMessage)));
     }
 }
