@@ -35,7 +35,6 @@ public class Student extends BasePerson {
     public void addMark(Mark mark) throws CustomValidationException {
         baseEntityValidator.validate(mark);
         this.marks.add(mark);
-        mark.setStudent(this);
     }
 
 

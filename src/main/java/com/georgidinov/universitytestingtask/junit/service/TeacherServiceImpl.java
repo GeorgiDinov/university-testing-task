@@ -3,11 +3,13 @@ package com.georgidinov.universitytestingtask.junit.service;
 import com.georgidinov.universitytestingtask.junit.api.v1.mapper.TeacherMapper;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
+import com.georgidinov.universitytestingtask.junit.domain.Teacher;
 import com.georgidinov.universitytestingtask.junit.repository.map.TeacherMapRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -43,8 +45,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO findTeacherById(Long id) {
-        return null;
+    public TeacherDTO findTeacherById(Long id) throws NoSuchElementException {
+        log.info("TeacherServiceImpl::findTeacherById");
+        Teacher teacher = this.teacherMapRepository.findById(id);
+        if (teacher == null) {
+            throw new NoSuchElementException("Record with ID = " + id + " Not Found");
+        }
+        return this.teacherMapper.teacherToTeacherDTO(teacher);
     }
 
     @Override

@@ -35,5 +35,9 @@ public class Mark implements BaseEntity {
         this.student = student;
     }
 
+    public void setStudent(Student student) throws CustomValidationException {
+        this.student = student;
+        this.student.addMark(this);
+    }
 
 }
