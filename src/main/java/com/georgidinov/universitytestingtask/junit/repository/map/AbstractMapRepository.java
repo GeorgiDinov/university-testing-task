@@ -45,7 +45,9 @@ public abstract class AbstractMapRepository<T extends BaseEntity, ID extends Lon
      */
     protected T save(T object) {
         if (object != null) {
-            object.setId(this.getNextId());
+            if (object.getId() == null) {
+                object.setId(this.getNextId());
+            }
             map.put(object.getId(), object);
         } else {
             throw new RuntimeException("Objects cannot be null");
