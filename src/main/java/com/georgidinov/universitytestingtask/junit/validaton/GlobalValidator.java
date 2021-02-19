@@ -1,14 +1,25 @@
-package com.georgidinov.universitytestingtask.junit.util;
+package com.georgidinov.universitytestingtask.junit.validaton;
 
+import com.georgidinov.universitytestingtask.junit.baseperson.BaseEntity;
 import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
-import com.georgidinov.universitytestingtask.junit.validaton.MyValidator;
 
 public final class GlobalValidator {
+
+    //BaseEntity validation
+    public static final MyValidator<BaseEntity> baseEntityValidator = baseEntity -> {
+        if (baseEntity == null) {
+            throw new CustomValidationException("Base Entity Is Null");
+        }
+        if (baseEntity.getId() == null) {
+            throw new CustomValidationException("Base Entity ID Is Null");
+        }
+    };
+
 
     //Base Person Name Validator
     public static final MyValidator<String> basePersonNameValidator = name -> {
         if (name == null) {
-            throw new CustomValidationException("Name IS Null");
+            throw new CustomValidationException("Name Is Null");
         }
         if (name.isEmpty()) {
             throw new CustomValidationException("Name Is Empty");

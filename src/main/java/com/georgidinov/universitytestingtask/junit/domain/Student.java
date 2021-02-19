@@ -10,14 +10,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.baseEntityValidator;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends BasePerson {
-
-    @Getter
-    @Setter
-    private Long id;
 
     @Getter
     private List<Parent> parents;
@@ -32,6 +30,12 @@ public class Student extends BasePerson {
         super(id, firstName, lastName);
         this.parents = parents;
         this.marks = marks;
+    }
+
+    public void addMark(Mark mark) throws CustomValidationException {
+        baseEntityValidator.validate(mark);
+        this.marks.add(mark);
+        mark.setStudent(this);
     }
 
 

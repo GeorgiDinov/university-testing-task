@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import static com.georgidinov.universitytestingtask.junit.util.GlobalValidator.markValueValidator;
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.baseEntityValidator;
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.markValueValidator;
 
 
 @Getter
@@ -28,7 +29,9 @@ public class Mark implements BaseEntity {
     public Mark(int markValue, Subject subject, Student student) throws CustomValidationException {
         markValueValidator.validate(markValue);
         this.markValue = markValue;
+        baseEntityValidator.validate(subject);
         this.subject = subject;
+        baseEntityValidator.validate(student);
         this.student = student;
     }
 

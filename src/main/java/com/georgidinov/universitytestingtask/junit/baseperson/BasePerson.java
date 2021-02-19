@@ -3,14 +3,17 @@ package com.georgidinov.universitytestingtask.junit.baseperson;
 
 import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import lombok.Getter;
+import lombok.Setter;
 
-import static com.georgidinov.universitytestingtask.junit.util.GlobalValidator.basePersonNameValidator;
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.basePersonNameValidator;
 
 public abstract class BasePerson implements BaseEntity {
 
 
     @Getter
-    private Long id;
+    @Setter
+    protected Long id;
+
     @Getter
     private String firstName;
     @Getter
