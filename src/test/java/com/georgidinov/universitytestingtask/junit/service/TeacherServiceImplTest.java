@@ -1,6 +1,7 @@
 package com.georgidinov.universitytestingtask.junit.service;
 
 import com.georgidinov.universitytestingtask.junit.api.v1.mapper.TeacherMapper;
+import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
 import com.georgidinov.universitytestingtask.junit.domain.Teacher;
 import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
@@ -11,11 +12,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static com.georgidinov.universitytestingtask.junit.util.ApplicationConstants.TEACHER_BASE_URL;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +58,37 @@ class TeacherServiceImplTest {
     }
 
     @Test
-    void findTeacherById() {
+    void findTeacherById() throws CustomValidationException {
+        //given
+        Long id = 1L;
+        String dtoUrl = TEACHER_BASE_URL + "/" + id;
+        Teacher teacher = Teacher.builder().id(id).firstName("John").lastName("Doe").build();
+        when(this.teacherMapRepository.findById(anyLong())).thenReturn(teacher);
+        //when
+        TeacherDTO teacherDTO = this.teacherService.findTeacherById(id);
+
+        //then
+        assertAll(
+                "Multiple assertions on TeacherDTO object",
+                () -> assertNotNull(teacherDTO),
+                () -> assertEquals(teacher.getFirstName(), teacherDTO.getFirstName()),
+                () -> assertEquals(teacher.getLastName(), teacherDTO.getLastName()),
+                () -> assertEquals(dtoUrl, teacherDTO.getTeacherUrl())
+        );
+        verify(this.teacherMapRepository).findById(anyLong());
+    }
+
+    @Test
+    void findTeacherByIdNotFound() {
+        //given
+        when(this.teacherMapRepository.findById(anyLong())).thenReturn(null);
+        //when
+        Exception exception = assertThrows(NoSuchElementException.class,
+                () -> this.teacherService.findTeacherById(1L));
+        //then
+        String expectedMessage = "Record with ID = 1 Not Found";
+        assertEquals(expectedMessage, exception.getMessage());
+        verify(this.teacherMapRepository).findById(anyLong());
     }
 
     @Test
