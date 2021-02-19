@@ -49,16 +49,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherDTO findTeacherById(Long id) throws NoSuchElementException {
-        log.info("TeacherServiceImpl::findTeacherById");
-        Teacher teacher = this.teacherMapRepository.findById(id);
-        if (teacher == null) {
-            throw new NoSuchElementException("Record with ID = " + id + " Not Found");
-        }
-        return this.teacherMapper.teacherToTeacherDTO(teacher);
+        log.info("TeacherServiceImpl::findTeacherById -> id passed = {}", id);
+        Teacher foundTeacher = this.validateTeacherExists(id);
+        return this.teacherMapper.teacherToTeacherDTO(foundTeacher);
     }
 
     @Override
     public TeacherDTO saveTeacher(TeacherDTO teacherDTO) throws CustomValidationException {
+        log.info("TeacherServiceImpl::saveTeacher -> DTO passed = {}", teacherDTO);
         this.validateTeacherDTO(teacherDTO);
         Teacher teacher = this.teacherMapper.teacherDTOToTeacher(teacherDTO);
         return this.saveTeacherToDatabase(teacher);
@@ -82,6 +80,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     private TeacherDTO saveTeacherToDatabase(Teacher teacher) {
         return this.teacherMapper.teacherToTeacherDTO(this.teacherMapRepository.save(teacher));
+    }
+
+    private Teacher validateTeacherExists(Long id) {
+        Teacher teacher = this.teacherMapRepository.findById(id);
+        if (teacher == null) {
+            throw new NoSuchElementException("Record with ID = " + id + " Not Found");
+        }
+        return teacher;
     }
 
 }

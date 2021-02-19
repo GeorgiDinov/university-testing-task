@@ -2,12 +2,15 @@ package com.georgidinov.universitytestingtask.junit.controller;
 
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
+import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import com.georgidinov.universitytestingtask.junit.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +38,18 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public TeacherDTO findTeacherById(@PathVariable String id) {
-        log.info("TeacherController::findTeacherById");
+        log.info("TeacherController::findTeacherById -> id passed = {}", id);
         return this.teacherService.findTeacherById(Long.valueOf(id));
+    }
+
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TeacherDTO saveTeacher(@RequestBody TeacherDTO teacherDTO) throws CustomValidationException {
+        log.info("TeacherController::saveTeacher -> DTO passed = {}", teacherDTO);
+        return this.teacherService.saveTeacher(teacherDTO);
     }
 
 }
