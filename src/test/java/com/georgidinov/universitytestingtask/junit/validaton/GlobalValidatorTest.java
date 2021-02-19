@@ -55,9 +55,9 @@ class GlobalValidatorTest {
 
     @Test
     void testCreatingMarkOk() throws CustomValidationException {
-        Subject subject = new Subject(1L, "History");
+        Subject subject = new Subject(1L, "History", new ArrayList<>());
         Student student = new Student(1L, "John", "Doe", new ArrayList<>(), new ArrayList<>());
-        Mark mark = new Mark(2, subject, student);
+        Mark mark = new Mark().id(1L).mark(3).subject(subject).student(student);
     }
 
     @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)

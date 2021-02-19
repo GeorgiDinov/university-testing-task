@@ -78,7 +78,7 @@ public class TeacherServiceImpl implements TeacherService {
         basePersonNameValidator.validate(teacherDTO.getLastName());
     }
 
-    private TeacherDTO saveTeacherToDatabase(Teacher teacher) {
+    private TeacherDTO saveTeacherToDatabase(Teacher teacher) throws CustomValidationException {
         return this.teacherMapper.teacherToTeacherDTO(this.teacherMapRepository.save(teacher));
     }
 

@@ -37,6 +37,4 @@ public class DataLoader implements CommandLineRunner {
         teacherList.add(Teacher.builder().firstName("Charlie").lastName("Sheen").build());
         teacherList.forEach(teacherMapRepository::save);
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.georgidinov.universitytestingtask.junit.domain;
 
+import com.georgidinov.universitytestingtask.junit.baseperson.BaseEntity;
 import com.georgidinov.universitytestingtask.junit.baseperson.BasePerson;
 import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Parent extends BasePerson {
+public class Parent extends BasePerson implements BaseEntity {
 
     private Long id;
 
@@ -20,7 +21,8 @@ public class Parent extends BasePerson {
 
     @Builder
     public Parent(Long id, String firstName, String lastName, Student student) throws CustomValidationException {
-        super(id, firstName, lastName);
+        super(firstName, lastName);
+        this.id = id;
         this.student = student;
     }
 }
