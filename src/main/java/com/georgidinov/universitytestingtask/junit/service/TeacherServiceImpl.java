@@ -4,6 +4,7 @@ import com.georgidinov.universitytestingtask.junit.api.v1.mapper.TeacherMapper;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
 import com.georgidinov.universitytestingtask.junit.domain.Teacher;
+import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import com.georgidinov.universitytestingtask.junit.repository.map.TeacherMapRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.basePersonNameValidator;
 
 /**
  * Service the controller class with business logic
@@ -55,8 +58,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO saveTeacher(TeacherDTO teacherDTO) {
-        return null;
+    public TeacherDTO saveTeacher(TeacherDTO teacherDTO) throws CustomValidationException {
+        this.validateTeacherDTO(teacherDTO);
+        Teacher teacher = this.teacherMapper.teacherDTOToTeacher(teacherDTO);
+        return this.saveTeacherToDatabase(teacher);
     }
 
     @Override
@@ -68,4 +73,15 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacherById(Long id) {
 
     }
+
+    //== private methods ==
+    private void validateTeacherDTO(TeacherDTO teacherDTO) throws CustomValidationException {
+        basePersonNameValidator.validate(teacherDTO.getFirstName());
+        basePersonNameValidator.validate(teacherDTO.getLastName());
+    }
+
+    private TeacherDTO saveTeacherToDatabase(Teacher teacher) {
+        return this.teacherMapper.teacherToTeacherDTO(this.teacherMapRepository.save(teacher));
+    }
+
 }
