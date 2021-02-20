@@ -48,7 +48,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO findTeacherById(Long id) throws NoSuchElementException {
+    public TeacherDTO findTeacherById(Long id) throws NoSuchElementException, CustomValidationException {
         log.info("TeacherServiceImpl::findTeacherById -> id passed = {}", id);
         Teacher foundTeacher = this.validateTeacherExists(id);
         return this.teacherMapper.teacherToTeacherDTO(foundTeacher);
@@ -63,8 +63,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) {
-        return null;
+    public TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) throws CustomValidationException {
+        log.info("TeacherServiceImpl::updateTeacher -> id passed = {}, DTO passed = {}", id, teacherDTO);
+        Teacher teacherToUpdate = this.validateTeacherExists(id);
+        this.validateTeacherDTO(teacherDTO);
+        teacherToUpdate.setFirstName(teacherDTO.getFirstName());
+        teacherToUpdate.setLastName(teacherDTO.getLastName());
+        return this.saveTeacherToDatabase(teacherToUpdate);
     }
 
     @Override
@@ -78,11 +83,15 @@ public class TeacherServiceImpl implements TeacherService {
         basePersonNameValidator.validate(teacherDTO.getLastName());
     }
 
-    private TeacherDTO saveTeacherToDatabase(Teacher teacher) throws CustomValidationException {
+    private TeacherDTO saveTeacherToDatabase(Teacher teacher) {
         return this.teacherMapper.teacherToTeacherDTO(this.teacherMapRepository.save(teacher));
     }
 
-    private Teacher validateTeacherExists(Long id) {
+    private Teacher validateTeacherExists(Long id) throws CustomValidationException {
+        if (id == null) {
+            throw new CustomValidationException("ID Is Null");
+        }
+
         Teacher teacher = this.teacherMapRepository.findById(id);
         if (teacher == null) {
             throw new NoSuchElementException("Record with ID = " + id + " Not Found");

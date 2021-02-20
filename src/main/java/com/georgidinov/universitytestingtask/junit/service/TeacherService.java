@@ -13,11 +13,11 @@ public interface TeacherService {
 
     TeacherListDTO findAllTeachers();
 
-    TeacherDTO findTeacherById(Long id) throws NoSuchElementException;
+    TeacherDTO findTeacherById(Long id) throws NoSuchElementException, CustomValidationException;
 
     TeacherDTO saveTeacher(TeacherDTO teacherDTO) throws CustomValidationException;
 
-    TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO);
+    TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) throws CustomValidationException;
 
     void deleteTeacherById(Long id);
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,7 +40,7 @@ public class TeacherController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TeacherDTO findTeacherById(@PathVariable String id) {
+    public TeacherDTO findTeacherById(@PathVariable String id) throws CustomValidationException {
         log.info("TeacherController::findTeacherById -> id passed = {}", id);
         return this.teacherService.findTeacherById(Long.valueOf(id));
     }
@@ -50,6 +51,15 @@ public class TeacherController {
     public TeacherDTO saveTeacher(@RequestBody TeacherDTO teacherDTO) throws CustomValidationException {
         log.info("TeacherController::saveTeacher -> DTO passed = {}", teacherDTO);
         return this.teacherService.saveTeacher(teacherDTO);
+    }
+
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TeacherDTO updateTeacher(@PathVariable String id,
+                                    @RequestBody TeacherDTO teacherDTO) throws CustomValidationException {
+        log.info("TeacherController::saveTeacher -> id passed = {}, DTO passed = {}", id, teacherDTO);
+        return this.teacherService.updateTeacher(Long.valueOf(id), teacherDTO);
     }
 
 }

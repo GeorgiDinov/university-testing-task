@@ -145,8 +145,59 @@ class TeacherServiceImplTest {
 
 
     @Test
-    void updateTeacher() {
+    void updateTeacher() throws CustomValidationException {
+        //given
+        Long id = 1L;
+        String responseDTOUrl = TEACHER_BASE_URL + "/" + id;
+        TeacherDTO requestDTO = TeacherDTO.builder().firstName("John Updated").lastName("Doe Updated").build();
+        Teacher teacherToUpdate = new Teacher(id, "John", "Doe");
+        when(this.teacherMapRepository.findById(anyLong())).thenReturn(teacherToUpdate);
+        when(this.teacherMapRepository.save(any(Teacher.class))).thenReturn(teacherToUpdate);
+        //when
+        TeacherDTO updatedDTO = this.teacherService.updateTeacher(id, requestDTO);
+
+        //then
+        assertAll(
+                "Multiple assertions on TeacherDTO object",
+                () -> assertNotNull(updatedDTO),
+                () -> assertEquals(requestDTO.getFirstName(), updatedDTO.getFirstName()),
+                () -> assertEquals(requestDTO.getLastName(), updatedDTO.getLastName()),
+                () -> assertEquals(responseDTOUrl, updatedDTO.getTeacherUrl())
+        );
+        verify(this.teacherMapRepository).save(any(Teacher.class));
+        verify(this.teacherMapRepository).findById(anyLong());
     }
+
+    @Test
+    void updateTeacherFailIdNull() {
+        //given
+        Long id = null;
+        String expectedMessage = "ID Is Null";
+        TeacherDTO requestDTO = TeacherDTO.builder().firstName("John").lastName("Doe").build();
+
+        //when
+        Exception exception = assertThrows(CustomValidationException.class,
+                () -> this.teacherService.updateTeacher(id, requestDTO));
+
+        //then
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
+    @MethodSource("teacherDTOProvider")
+    void updateTeacherInvalidTeacherDTO(TeacherDTO teacherDTO, String expectedMessage) throws CustomValidationException {
+        //given
+        Long id = 1L;
+        Teacher teacherFromDB = new Teacher(id, "John", "Doe");
+        when(this.teacherMapRepository.findById(anyLong())).thenReturn(teacherFromDB);
+
+        //when
+        Exception exception = assertThrows(CustomValidationException.class,
+                () -> this.teacherService.updateTeacher(id, teacherDTO));
+        //then
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
 
     @Test
     void deleteTeacherById() {
