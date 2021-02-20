@@ -3,9 +3,12 @@ package com.georgidinov.universitytestingtask.junit.controller;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherDTO;
 import com.georgidinov.universitytestingtask.junit.api.v1.model.TeacherListDTO;
 import com.georgidinov.universitytestingtask.junit.controlleradvise.ControllerExceptionHandler;
+import com.georgidinov.universitytestingtask.junit.exception.CustomValidationException;
 import com.georgidinov.universitytestingtask.junit.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -20,13 +23,17 @@ import java.util.NoSuchElementException;
 import static com.georgidinov.universitytestingtask.junit.util.ApplicationConstants.TEACHER_BASE_URL;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class TeacherControllerTest {
+
+class TeacherControllerTest extends AbstractRestControllerTest {
 
     @Mock
     private TeacherService teacherService;
@@ -83,4 +90,34 @@ class TeacherControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error_message", equalTo(exceptionMessage)));
     }
+
+    @Test
+    void saveTeacher() throws Exception {
+        //given
+        TeacherDTO requestDTO = TeacherDTO.builder().firstName("John").lastName("Doe").build();
+        TeacherDTO expectedDTO = new TeacherDTO(requestDTO.getFirstName(), requestDTO.getLastName(), TEACHER_BASE_URL + "/" + 1);
+        when(this.teacherService.saveTeacher(any(TeacherDTO.class))).thenReturn(expectedDTO);
+        //when then
+        mockMvc.perform(post(TEACHER_BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.first_name", equalTo(requestDTO.getFirstName())))
+                .andExpect(jsonPath("$.last_name", equalTo(requestDTO.getLastName())))
+                .andExpect(jsonPath("$.teacher_url", equalTo(expectedDTO.getTeacherUrl())));
+    }
+
+    @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
+    @MethodSource("com.georgidinov.universitytestingtask.junit.service.TeacherServiceImplTest#teacherDTOProvider")
+    void saveTeacherBadRequestBodyParametrized(TeacherDTO teacherDTO, String exceptionMessage) throws Exception {
+        when(this.teacherService.saveTeacher(any(TeacherDTO.class)))
+                .thenThrow(new CustomValidationException(exceptionMessage));
+        //when then
+        mockMvc.perform(post(TEACHER_BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(teacherDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error_message", equalTo(exceptionMessage)));
+    }
+
 }
