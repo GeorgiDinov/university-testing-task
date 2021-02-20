@@ -73,8 +73,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void deleteTeacherById(Long id) {
-
+    public void deleteTeacherById(Long id) throws CustomValidationException {
+        log.info("TeacherServiceImpl::deleteTeacherById -> id passed = {}", id);
+        Teacher teacherToDelete = this.validateTeacherExists(id);
+        log.info("Deleting {}", teacherToDelete);
+        this.teacherMapRepository.deleteById(id);
     }
 
     //== private methods ==

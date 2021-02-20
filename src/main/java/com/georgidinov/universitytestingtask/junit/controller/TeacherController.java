@@ -7,6 +7,7 @@ import com.georgidinov.universitytestingtask.junit.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,13 @@ public class TeacherController {
                                     @RequestBody TeacherDTO teacherDTO) throws CustomValidationException {
         log.info("TeacherController::saveTeacher -> id passed = {}, DTO passed = {}", id, teacherDTO);
         return this.teacherService.updateTeacher(Long.valueOf(id), teacherDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTeacherById(@PathVariable String id) throws CustomValidationException {
+        log.info("TeacherController::deleteTeacherById -> id passed = {}", id);
+        this.teacherService.deleteTeacherById(Long.valueOf(id));
     }
 
 }

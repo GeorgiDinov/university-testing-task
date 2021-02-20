@@ -19,6 +19,6 @@ public interface TeacherService {
 
     TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) throws CustomValidationException;
 
-    void deleteTeacherById(Long id);
+    void deleteTeacherById(Long id) throws CustomValidationException;
 
 }

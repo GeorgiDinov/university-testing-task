@@ -22,4 +22,12 @@ public class Teacher extends BasePerson implements BaseEntity {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id= " + this.id +
+                ", first_name=" + this.getFirstName() +
+                ", last_name=" + this.getLastName() +
+                '}';
+    }
 }

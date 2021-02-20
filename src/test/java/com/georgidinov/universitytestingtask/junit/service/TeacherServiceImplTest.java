@@ -200,6 +200,33 @@ class TeacherServiceImplTest {
 
 
     @Test
-    void deleteTeacherById() {
+    void deleteTeacherById() throws CustomValidationException {
+        //given
+        Teacher teacher = new Teacher(1L, "John", "Doe");
+        when(this.teacherMapRepository.findById(anyLong())).thenReturn(teacher);
+
+        //when
+        this.teacherService.deleteTeacherById(anyLong());
+
+        //then
+        verify(teacherMapRepository).deleteById(anyLong());
     }
+
+    @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
+    @MethodSource("badIdProvider")
+    void deleteTeacherByIdInvalidId(Long id, String expectedMessage) {
+
+        Exception exception = assertThrows(Exception.class,
+                () -> this.teacherService.deleteTeacherById(id));
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    private static Stream<Arguments> badIdProvider() {
+        return Stream.of(
+                Arguments.of(null, "ID Is Null"),
+                Arguments.of(1L, "Record with ID = 1 Not Found")
+        );
+    }
+
 }

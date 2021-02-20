@@ -26,9 +26,12 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,4 +123,29 @@ class TeacherControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.error_message", equalTo(exceptionMessage)));
     }
 
+    @Test
+    void updateTeacher() throws Exception {
+        //given
+        long id = 1L;
+        TeacherDTO requestDTO = TeacherDTO.builder().firstName("John Updated").lastName("Doe Updated").build();
+        TeacherDTO expectedDTO = new TeacherDTO(requestDTO.getFirstName(), requestDTO.getLastName(), TEACHER_BASE_URL + "/" + id);
+        when(this.teacherService.updateTeacher(anyLong(), any(TeacherDTO.class))).thenReturn(expectedDTO);
+
+        //when then
+        mockMvc.perform(put(TEACHER_BASE_URL + "/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.first_name", equalTo(expectedDTO.getFirstName())))
+                .andExpect(jsonPath("$.last_name", equalTo(expectedDTO.getLastName())))
+                .andExpect(jsonPath("$.teacher_url", equalTo(expectedDTO.getTeacherUrl())));
+    }
+
+    @Test
+    void deleteTeacherById() throws Exception {
+        mockMvc.perform(delete(TEACHER_BASE_URL + "/" + 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(this.teacherService).deleteTeacherById(anyLong());
+    }
 }
