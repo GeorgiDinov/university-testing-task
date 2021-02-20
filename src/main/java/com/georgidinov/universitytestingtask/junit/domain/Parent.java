@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.georgidinov.universitytestingtask.junit.validaton.GlobalValidator.baseEntityValidator;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class Parent extends BasePerson implements BaseEntity {
     public Parent(Long id, String firstName, String lastName, Student student) throws CustomValidationException {
         super(firstName, lastName);
         this.id = id;
+        baseEntityValidator.validate(student);
         this.student = student;
     }
 }
